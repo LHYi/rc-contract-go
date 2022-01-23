@@ -3,7 +3,7 @@ module github.com/LHYi/rc-contract-go/response-credit
 go 1.17
 
 require (
-	github.com/LHYi/response-credit/response-credit/contract-go/ledger-api v0.0.0-20220123090441-167711dbd488
+	github.com/LHYi/rc-contract-go/ledger-api v0.0.0-20220123091825-b0a228389320
 	github.com/hyperledger/fabric-contract-api-go v1.1.1
 )
 
