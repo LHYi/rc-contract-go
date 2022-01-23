@@ -5,7 +5,7 @@ import (
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 
-	responsecredit "github.com/LHYi/response-credit/response-credit/contract-go/response-credit"
+	responsecredit "github.com/LHYi/rc-contract-go/response-credit"
 )
 
 func main() {
