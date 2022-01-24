@@ -33,7 +33,7 @@ func (c *Contract) Issue(ctx TransactionContextInterface, issuer string, creditN
 }
 
 // Buy updates a response credit to be in trading status and sets the new owner
-func (c *Contract) Buy(ctx TransactionContextInterface, issuer string, creditNumber string, currentOwner string, newOwner string, price int, purchaseDateTime string) (*ResponseCredit, error) {
+func (c *Contract) Buy(ctx TransactionContextInterface, issuer string, creditNumber string, currentOwner string, currentOwnerMSP string, newOwner string, newOwnerMSP string, price int, purchaseDateTime string) (*ResponseCredit, error) {
 	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
 
 	if err != nil {
@@ -42,6 +42,11 @@ func (c *Contract) Buy(ctx TransactionContextInterface, issuer string, creditNum
 
 	if credit.Owner != currentOwner {
 		return nil, fmt.Errorf("Credit %s:%s is not owned by %s", issuer, creditNumber, currentOwner)
+	}
+
+	//! waiting for modfiction
+	if credit.OwnerMSP != ctx.clientIdentity.getMSPID() {
+		return nil, fmt.Errorf("Credit %s:%s is not owned by ")
 	}
 
 	if credit.IsIssued() {

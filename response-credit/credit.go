@@ -13,6 +13,8 @@ type State uint
 const (
 	// ISSUED state for when a credit has been issued
 	ISSUED State = iota + 1
+	// PENDING is the intermediate state of a trading process
+	PENDING
 	// TRADING state for when a credit is trading
 	TRADING
 	// REDEEMED state for when a credit has been redeemed
@@ -20,7 +22,7 @@ const (
 )
 
 func (state State) String() string {
-	names := []string{"ISSUED", "TRADING", "REDEEMED"}
+	names := []string{"ISSUED", "PENDING", "TRADING", "REDEEMED"}
 
 	if state < ISSUED || state > REDEEMED {
 		return "UNKNOWN"
@@ -51,10 +53,11 @@ type ResponseCredit struct {
 	IssueDateTime string `json:"issueDateTime"`
 	//FaceValue        int    `json:"faceValue"`
 	//MaturityDateTime string `json:"maturityDateTime"`
-	Owner string `json:"owner"`
-	state State  `metadata:"currentState"`
-	class string `metadata:"class"`
-	key   string `metadata:"key"`
+	Owner    string `json:"owner"`
+	OwnerMSP string `json:"OwnerMSP`
+	state    State  `metadata:"currentState"`
+	class    string `metadata:"class"`
+	key      string `metadata:"key"`
 }
 
 // UnmarshalJSON special handler for managing JSON marshalling
