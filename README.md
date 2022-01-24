@@ -20,6 +20,7 @@ export PATH=${PWD}/../bin:$PATH
 export FABRIC_CFG_PATH=$PWD/../config/
 ```
 
+<<<<<<< HEAD
 Package chaincode (the chaincode path should be changed accordingly)
 
     peer lifecycle chaincode package rc.tar.gz --path ../../mycode/rc-contract-go/ --lang golang --label rc_1.0
@@ -100,3 +101,5 @@ Invoking the method instantiate, which does nothing
 
 
 Waiting for future updates...
+=======
+>>>>>>> ffe557697f29c72b79684ecacdda2bf36d4ce0fc
