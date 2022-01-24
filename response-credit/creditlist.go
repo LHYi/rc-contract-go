@@ -1,7 +1,5 @@
 package responsecredit
 
-// ! need to be vhanged to the private repo later
-// import ledgerapi "github.com/hyperledger/fabric-samples/commercial-paper/organization/magnetocorp/contract-go/ledger-api"
 import ledgerapi "github.com/LHYi/rc-contract-go/ledger-api"
 
 // ListInterface defines functionality needed
