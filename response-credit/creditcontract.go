@@ -45,8 +45,12 @@ func (c *Contract) Buy(ctx TransactionContextInterface, issuer string, creditNum
 	}
 
 	//! waiting for modfiction
-	if credit.OwnerMSP != ctx.clientIdentity.getMSPID() {
-		return nil, fmt.Errorf("Credit %s:%s is not owned by ")
+	clientIdentity, err := ctx.GetClientIdentity().GetMSPID()
+	if err != nil {
+		return nil, fmt.Errorf("Failed to get client identity")
+	}
+	if credit.OwnerMSP != clientIdentity {
+		return nil, fmt.Errorf("Credit %s:%s is not owned by ", issuer, creditNumber)
 	}
 
 	if credit.IsIssued() {
