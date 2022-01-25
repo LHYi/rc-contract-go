@@ -54,7 +54,7 @@ type ResponseCredit struct {
 	//FaceValue        int    `json:"faceValue"`
 	//MaturityDateTime string `json:"maturityDateTime"`
 	Owner    string `json:"owner"`
-	OwnerMSP string `json:"OwnerMSP`
+	OwnerMSP string `json:"OwnerMSP"`
 	state    State  `metadata:"currentState"`
 	class    string `metadata:"class"`
 	key      string `metadata:"key"`
