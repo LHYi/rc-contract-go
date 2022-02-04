@@ -44,13 +44,31 @@ func (c *Contract) Buy(ctx TransactionContextInterface, issuer string, creditNum
 		return nil, fmt.Errorf("Credit %s:%s is not owned by %s", issuer, creditNumber, currentOwner)
 	}
 
-	//! waiting for modfiction
-	clientIdentity, err := ctx.GetClientIdentity().GetMSPID()
-	if err != nil {
-		return nil, fmt.Errorf("Failed to get client identity")
+	if credit.IsIssued() {
+		credit.SetTrading()
 	}
-	if credit.OwnerMSP != clientIdentity {
-		return nil, fmt.Errorf("Credit %s:%s is not owned by ", issuer, creditNumber)
+
+	if !credit.IsTrading() {
+		return nil, fmt.Errorf("Credit %s:%s is not trading. Current state = %s", issuer, creditNumber, credit.GetState())
+	}
+
+	credit.Owner = newOwner
+
+	err = ctx.GetCreditList().UpdateCredit(credit)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return credit, nil
+}
+
+// BuyRequest is invoked by the buyer, which checks the owner of the response credit and set it to the pending state
+func (c *Contract) BuyRequest(ctx TransactionContextInterface, issuer string, creditNumber string, currentOwner string, newOwner string, price int, purchaseDateTime string) (*ResponseCredit, error) {
+	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
+
+	if err != nil {
+		return nil, err
 	}
 
 	if credit.IsIssued() {
@@ -61,7 +79,36 @@ func (c *Contract) Buy(ctx TransactionContextInterface, issuer string, creditNum
 		return nil, fmt.Errorf("Credit %s:%s is not trading. Current state = %s", issuer, creditNumber, credit.GetState())
 	}
 
+	credit.SetPending()
+
+	err = ctx.GetCreditList().UpdateCredit(credit)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return credit, nil
+}
+
+// Transfer function only allows the owner of the commercial paper to execute, which is the complement to the BuyRequest function.
+func (c *Contract) Transfer(ctx TransactionContextInterface, issuer string, creditNumber string, currentOwner string, newOwner string, newOwnerMSP string, confirmDateTime string) (*ResponseCredit, error) {
+	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
+
+	clientIdentity, err := ctx.GetClientIdentity().GetMSPID()
+	if err != nil {
+		return nil, fmt.Errorf("Failed to get client identity")
+	}
+	if credit.OwnerMSP != clientIdentity {
+		return nil, fmt.Errorf("Credit %s:%s is not owned by you, failed to transfer", issuer, creditNumber)
+	}
+
+	if !credit.IsPending() {
+		return nil, fmt.Errorf("Credit %s:%s is not pending. Current state = %s. Need to invoke BuyRequest first.", issuer, creditNumber, credit.GetState())
+	}
+
 	credit.Owner = newOwner
+	credit.OwnerMSP = newOwnerMSP
+	credit.SetTrading()
 
 	err = ctx.GetCreditList().UpdateCredit(credit)
 

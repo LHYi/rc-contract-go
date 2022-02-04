@@ -92,6 +92,11 @@ func (rc *ResponseCredit) SetIssued() {
 	rc.state = ISSUED
 }
 
+// SetPending sets the state to pending
+func (rc *ResponseCredit) SetPending() {
+	rc.state = PENDING
+}
+
 // SetTrading sets the state to trading
 func (rc *ResponseCredit) SetTrading() {
 	rc.state = TRADING
@@ -105,6 +110,11 @@ func (rc *ResponseCredit) SetRedeemed() {
 // IsIssued returns true if state is issued
 func (rc *ResponseCredit) IsIssued() bool {
 	return rc.state == ISSUED
+}
+
+// IsPending returns true if state is pending
+func (rc *ResponseCredit) IsPending() bool {
+	return rc.state == PENDING
 }
 
 // IsTrading returns true if state is trading
