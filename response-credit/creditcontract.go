@@ -127,12 +127,20 @@ func (c *Contract) Redeem(ctx TransactionContextInterface, issuer string, credit
 		return nil, err
 	}
 
-	if credit.Owner != redeemingOwner {
-		return nil, fmt.Errorf("Credit %s:%s is not owned by %s", issuer, creditNumber, redeemingOwner)
-	}
-
 	if credit.IsRedeemed() {
 		return nil, fmt.Errorf("Credit %s:%s is already redeemed", issuer, creditNumber)
+	}
+
+	clientIdentity, err := ctx.GetClientIdentity().GetMSPID()
+	if err != nil {
+		return nil, fmt.Errorf("Failed to get client identity")
+	}
+	if credit.OwnerMSP != clientIdentity {
+		return nil, fmt.Errorf("Credit %s:%s is not owned by you, failed to invoke Redeem", issuer, creditNumber)
+	}
+
+	if credit.Owner != redeemingOwner {
+		return nil, fmt.Errorf("Credit %s:%s is not owned by %s", issuer, creditNumber, redeemingOwner)
 	}
 
 	credit.Owner = credit.Issuer
