@@ -155,3 +155,15 @@ func (c *Contract) Redeem(ctx TransactionContextInterface, issuer string, credit
 
 	return credit, nil
 }
+
+//TODO: can be further extended according to the query utils script
+// QueryCredit returns the credit queried by the given issuer and credir number
+func QueryCredit(ctx TransactionContextInterface, issuer string, creditNumber string) (*ResponseCredit, error) {
+	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return credit, nil
+}
