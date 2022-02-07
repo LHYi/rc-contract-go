@@ -19,8 +19,8 @@ func (c *Contract) Instantiate() {
 }
 
 // Issue creates a new response credit and stores it in the world state
-func (c *Contract) Issue(ctx TransactionContextInterface, issuer string, creditNumber string, issueDateTime string) (*ResponseCredit, error) {
-	credit := ResponseCredit{CreditNumber: creditNumber, Issuer: issuer, IssueDateTime: issueDateTime, Owner: issuer}
+func (c *Contract) Issue(ctx TransactionContextInterface, issuer string, issuerMSP string, creditNumber string, issueDateTime string) (*ResponseCredit, error) {
+	credit := ResponseCredit{CreditNumber: creditNumber, Issuer: issuer, IssuerMSP: issuerMSP, IssueDateTime: issueDateTime, Owner: issuer}
 	credit.SetIssued()
 
 	err := ctx.GetCreditList().AddCredit(&credit)
@@ -144,6 +144,7 @@ func (c *Contract) Redeem(ctx TransactionContextInterface, issuer string, credit
 	}
 
 	credit.Owner = credit.Issuer
+	credit.OwnerMSP = credit.IssuerMSP
 	credit.SetRedeemed()
 
 	err = ctx.GetCreditList().UpdateCredit(credit)

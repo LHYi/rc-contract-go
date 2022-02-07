@@ -50,6 +50,7 @@ type jsonResponseCredit struct {
 type ResponseCredit struct {
 	CreditNumber  string `json:"creditNumber"`
 	Issuer        string `json:"issuer"`
+	IssuerMSP	  string `json:"issuerMSP"`
 	IssueDateTime string `json:"issueDateTime"`
 	//FaceValue        int    `json:"faceValue"`
 	//MaturityDateTime string `json:"maturityDateTime"`
