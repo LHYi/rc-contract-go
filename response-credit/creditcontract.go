@@ -19,13 +19,13 @@ func (c *Contract) Instantiate() {
 }
 
 // Issue creates a new response credit and stores it in the world state
-func (c *Contract) Issue(ctx TransactionContextInterface, creditNumber string, issuer string, issuerMSP string, issueDateTime string) (*ResponseCredit, error) {
+func (c *Contract) Issue(ctx TransactionContextInterface, creditNumber string, issuer string, issueDateTime string) (*ResponseCredit, error) {
 	clientIdentity, err0 := ctx.GetClientIdentity().GetMSPID()
 	if err0 != nil {
 		return nil, fmt.Errorf("Failed to get client identity")
 	}
 
-	credit := ResponseCredit{CreditNumber: creditNumber, Issuer: issuer, IssuerMSP: clientIdentity, IssueDateTime: issueDateTime, Owner: issuer, OwnerMSP: issuerMSP}
+	credit := ResponseCredit{CreditNumber: creditNumber, Issuer: issuer, IssuerMSP: clientIdentity, IssueDateTime: issueDateTime, Owner: issuer, OwnerMSP: clientIdentity}
 	credit.SetIssued()
 
 	err := ctx.GetCreditList().AddCredit(&credit)
@@ -163,7 +163,7 @@ func (c *Contract) Redeem(ctx TransactionContextInterface, issuer string, credit
 
 //TODO: can be further extended according to the query utils script
 // QueryCredit returns the credit queried by the given issuer and credir number
-func QueryCredit(ctx TransactionContextInterface, issuer string, creditNumber string) (*ResponseCredit, error) {
+func (c *Contract) QueryCredit(ctx TransactionContextInterface, issuer string, creditNumber string) (*ResponseCredit, error) {
 	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
 
 	if err != nil {
