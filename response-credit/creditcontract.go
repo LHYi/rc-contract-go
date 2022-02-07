@@ -19,8 +19,13 @@ func (c *Contract) Instantiate() {
 }
 
 // Issue creates a new response credit and stores it in the world state
-func (c *Contract) Issue(ctx TransactionContextInterface, issuer string, issuerMSP string, creditNumber string, issueDateTime string) (*ResponseCredit, error) {
-	credit := ResponseCredit{CreditNumber: creditNumber, Issuer: issuer, IssuerMSP: issuerMSP, IssueDateTime: issueDateTime, Owner: issuer}
+func (c *Contract) Issue(ctx TransactionContextInterface, creditNumber string, issuer string, issuerMSP string, issueDateTime string) (*ResponseCredit, error) {
+	clientIdentity, err0 := ctx.GetClientIdentity().GetMSPID()
+	if err0 != nil {
+		return nil, fmt.Errorf("Failed to get client identity")
+	}
+
+	credit := ResponseCredit{CreditNumber: creditNumber, Issuer: issuer, IssuerMSP: clientIdentity, IssueDateTime: issueDateTime, Owner: issuer, OwnerMSP: issuerMSP}
 	credit.SetIssued()
 
 	err := ctx.GetCreditList().AddCredit(&credit)

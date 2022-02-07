@@ -13,6 +13,12 @@ Open a terminal from the /test-network dictionary, run
 ./network.sh up createChannel
 ``` 
 
+List the docker containers you created above
+
+```
+docker ps -a
+```
+
 Add the binaries and config filepath to the CLI path
 
 ```
@@ -34,22 +40,22 @@ Operate the peer CLI as the Org1 admin user
     export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     export CORE_PEER_ADDRESS=localhost:7051
 
+From the /test-network terminal, run the following command to install chaincode to Org1 peer node
+
+    peer lifecycle chaincode install rc.tar.gz
+
 If the chaincode intallation failed with github connection problem, open a terminal from /rc-contract-go and run
 
     go mod tidy
     go mod vendor
 
-From the /test-network terminal, run the following command to install chaincode to Org1 peer node
-
-    peer lifecycle chaincode install rc.tar.gz
-
 Query the installed chaincode id (the package ID should be changed according to the ID returned by the command "queryinstalled")
 
     peer lifecycle chaincode queryinstalled
 
-Save the id to a variable
+Save the id to a variable (the chaincode id should be changed according to the output of the last command)
 
-    export CC_PACKAGE_ID=rc_1.0:f9372d0d56f01f83434d3246a142a372443299d52653ef687c2422eca8f340ab
+    export CC_PACKAGE_ID=rc_1.0:ef3824ede27add5526cc37d47e6a8e7122a22129c570db19e98bf5f34b04ff47
 
 Approve as Org1 admin
 
@@ -59,7 +65,7 @@ Check if the chaincode is ready to be committed to the channel (currently it sho
 
     peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --output json
 
-Try to commit the chaincode to the channel (orderer service), again it should fail here
+Try to commit the chaincode to the channel (orderer service), it should fail here
 
     peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name basic --version 1.0 --sequence 1 --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 
@@ -98,5 +104,11 @@ Invoking the method instantiate, which does nothing
 
     peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"Instantiate","Args":[]}'
 
+Issue a new response credit,
+
+    peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"Issue","Args":["VPPO","VPPOMSP","000001","2022-02-07"]}'
 
 Waiting for future updates...
+
+### Clean up
+    ./network.sh down
