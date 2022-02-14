@@ -28,7 +28,7 @@ export FABRIC_CFG_PATH=$PWD/../config/
 
 Package chaincode (the chaincode path should be changed accordingly)
 
-    peer lifecycle chaincode package rc.tar.gz --path ../../mycode/rc-contract-go/ --lang golang --label rc_1.0
+    peer lifecycle chaincode package rc.tar.gz --path ../../rc-contract-go/ --lang golang --label rc_1.0
 
 ### Install and approve the chaincode as Org1
 
