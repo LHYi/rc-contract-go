@@ -4,6 +4,16 @@ This is the smart contract based on golang.
 
 The smart contract can be tested with the following steps.
 
+### Important
+
+Everytime the contract is updated, run the following commands to update the local modules.
+
+```
+go get -u
+go mod tidy
+go mod vendor
+```
+
 ### Bring up the test network
 
 Open a terminal from the /test-network dictionary, run
