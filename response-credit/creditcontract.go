@@ -37,6 +37,17 @@ func (c *Contract) Issue(ctx TransactionContextInterface, creditNumber string, i
 	return &credit, nil
 }
 
+// Query returns the credit queried by the given issuer and credir number
+func (c *Contract) Query(ctx TransactionContextInterface, creditNumber string, issuer string) (*ResponseCredit, error) {
+	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return credit, nil
+}
+
 // Buy updates a response credit to be in trading status and sets the new owner
 func (c *Contract) Buy(ctx TransactionContextInterface, issuer string, creditNumber string, currentOwner string, currentOwnerMSP string, newOwner string, newOwnerMSP string, price int, purchaseDateTime string) (*ResponseCredit, error) {
 	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
@@ -153,17 +164,6 @@ func (c *Contract) Redeem(ctx TransactionContextInterface, issuer string, credit
 	credit.SetRedeemed()
 
 	err = ctx.GetCreditList().UpdateCredit(credit)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return credit, nil
-}
-
-// QueryCredit returns the credit queried by the given issuer and credir number
-func (c *Contract) QueryCredit(ctx TransactionContextInterface, issuer string, creditNumber string) (*ResponseCredit, error) {
-	credit, err := ctx.GetCreditList().GetCredit(issuer, creditNumber)
 
 	if err != nil {
 		return nil, err
