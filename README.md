@@ -20,8 +20,10 @@ Open a terminal from the /test-network dictionary, run
 
 ```shell
 ./network.sh down
-./network.sh up createChannel
+./network.sh up createChannel -ca
 ```
+
+Note that establishing gRPC connection requires the usage of CA in the latest release.
 
 List the docker containers you created above
 
